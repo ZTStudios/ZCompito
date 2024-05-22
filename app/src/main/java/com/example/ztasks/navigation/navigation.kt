@@ -22,8 +22,11 @@ fun NavManager() {
 
     NavHost(navController = navController, startDestination = "start") {
         composable("start") {
+            Login()
+        }
+        composable("home") {
             Home()
         }
     }
-}}
+}
 

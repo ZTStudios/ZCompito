@@ -75,7 +75,7 @@ fun Home() {
             StatusWidget()
         }
         Divider(modifier = Modifier.height(10.dp), color = Color.Transparent)
-        Row {
+        Row() {
             Text(
                 text = "My day",
                 fontSize = 20.sp,
