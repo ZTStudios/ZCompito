@@ -30,7 +30,7 @@ import androidx.navigation.NavController
 import com.example.ztasks.R
 import com.example.ztasks.components.StatusWidget
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun Home() {
     Column(

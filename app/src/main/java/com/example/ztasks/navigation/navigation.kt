@@ -12,7 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.ztasks.ui.theme.screens.Home.Home
+import com.example.ztasks.views.Home
+import com.example.ztasks.views.Login
 import kotlinx.coroutines.launch
 
 @Composable
@@ -22,7 +23,7 @@ fun NavManager() {
 
     NavHost(navController = navController, startDestination = "start") {
         composable("start") {
-            Login()
+            Login(onNavigate = { navController.navigate("home") }) // Corrección aquí
         }
         composable("home") {
             Home()

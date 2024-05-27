@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun Login(onNavigate: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -61,12 +61,12 @@ fun LoginScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(0.8f)
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "No tienes cuenta? Crea una cuenta aqui",
-            modifier = Modifier.clickable { navController.navigate("register") }
-        )
+//        Text(
+//            text = "No tienes cuenta? Crea una cuenta aqui",
+//            modifier = Modifier.clickable { onNavigate() }
+//        )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { /* Handle login here */ }) {
+        Button(onClick = { onNavigate() }) {
             Text("Login")
         }
     }
