@@ -12,15 +12,21 @@ class LoginViewModel : ViewModel() {
     var loginResponse: Response<LoginResponse>? = null
         private set
 
-    fun login(email: String, password: String, onResult: (Boolean) -> Unit) {
+    fun login(email: String, password: String, onResult: (Boolean, LoginResponse?) -> Unit) {
         viewModelScope.launch {
             try {
                 val response = apiService.login(LoginRequest(email, password))
-                loginResponse = response
-                onResult(response.isSuccessful)
+                if(response.isSuccessful){
+                    val userData = response.body()
+                    onResult(true, userData)
+                } else {
+                    onResult(false, null)
+                }
             } catch (e: Exception) {
-                onResult(false)
+                onResult(false, null)
             }
         }
     }
 }
+
+

@@ -7,16 +7,31 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface Api {
 
-    @GET("tasks/{id}")
+    @GET("tasks/{userId}")
     suspend fun getUserTasks(
-        @Path("id") id: Int
+        @Path("userId") userId: Int
     ): List<Task>
+
+
+    @POST("tasks/{id}")
+    suspend fun createTask(@Body task: Task, @Path("id") id: Int) : Response<Task>
+
+    @PUT("tasks/{id}")
+    suspend fun updateTask(@Path("id") id: Int, @Body task: Task): Response<Task>
+
+    @DELETE("tasks/{id}")
+    suspend fun deleteTask(@Path("id") id: Int): Response<Unit>
+
+
+
 
     @POST("auth")
     suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>

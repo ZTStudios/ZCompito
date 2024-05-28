@@ -1,6 +1,7 @@
 package com.example.ztasks.views
 
 import LoginViewModel
+import android.service.autofill.UserData
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -16,11 +17,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ztasks.data.models.LoginResponse
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Login(onNavigate: () -> Unit, loginViewModel: LoginViewModel = viewModel()) {
+fun Login(onNavigate: (LoginResponse) -> Unit, loginViewModel: LoginViewModel = viewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
@@ -78,10 +80,10 @@ fun Login(onNavigate: () -> Unit, loginViewModel: LoginViewModel = viewModel()) 
                     onClick = {
                         keyboardController?.hide() // Ocultar el teclado
                         isLoading = true
-                        loginViewModel.login(email, password) { success ->
+                        loginViewModel.login(email, password) { success, userData ->
                             isLoading = false
-                            if (success) {
-                                onNavigate()
+                            if (success && userData != null) {
+                                onNavigate(userData)
                             } else {
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar(
