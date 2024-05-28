@@ -38,6 +38,7 @@ import com.example.ztasks.data.viewModels.HomeViewModel
 fun Home(homeViewModel: HomeViewModel = viewModel()) {
     // Observa LiveData usando observeAsState
     val tasks by homeViewModel.userTasks.observeAsState(initial = emptyList())
+    val completedTasksCount = tasks.count { it.completed }
 
     LaunchedEffect(Unit) {
         homeViewModel.fetchUserTasks(1)
@@ -76,11 +77,11 @@ fun Home(homeViewModel: HomeViewModel = viewModel()) {
         }
         Divider(modifier = Modifier.height(10.dp), color = Color.Transparent)
         Row {
-            StatusWidget()
+            StatusWidget(completedTasksCount)
         }
         Divider(modifier = Modifier.height(10.dp), color = Color.Transparent)
         Row {
-            StatusWidget()
+            StatusWidget(completedTasksCount)
         }
         Divider(modifier = Modifier.height(10.dp), color = Color.Transparent)
         Row {

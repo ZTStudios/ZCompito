@@ -19,16 +19,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@Preview(showBackground = true)
 @Composable
-fun StatusWidget() {
+fun StatusWidget(taskCount : Int) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(10.dp))
         .background(colorResource(id = R.color.purple_600)), horizontalArrangement = Arrangement.Center) {
         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth().padding(30.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-           Text(text = "7 days in a row", fontSize = 20.sp, fontWeight = FontWeight.Medium, color = colorResource(id = R.color.white))
-            Text(text = "You completed 7 tasks", color = colorResource(id = R.color.white))
+           Text(text = "${taskCount} days in a row", fontSize = 20.sp, fontWeight = FontWeight.Medium, color = colorResource(id = R.color.white))
+            Text(text = "You completed ${taskCount} tasks", color = colorResource(id = R.color.white))
         }
     }
 
