@@ -6,5 +6,6 @@ data class Task(
     val dueDate: Any? = null,
     val title: String,
     val updatedAt: String? = null,
-    val userId: Int = 0
+    val userId: Int = 0,
+    val id : Int = 0
 )

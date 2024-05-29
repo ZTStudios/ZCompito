@@ -30,9 +30,6 @@ interface Api {
     @DELETE("tasks/{id}")
     suspend fun deleteTask(@Path("id") id: Int): Response<Unit>
 
-
-
-
     @POST("auth")
     suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>
 

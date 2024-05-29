@@ -25,7 +25,7 @@ import com.example.ztasks.data.models.Task
 
 @SuppressLint("RememberReturnType")
 @Composable
-fun CheckList(tasks: List<Task>, onDelete: (Task) -> Unit) {
+fun CheckList(tasks: List<Task>, onDelete: (Task) -> Unit, onTaskClick: (Task) -> Unit) {
     LazyColumn {
         items(tasks) { task ->
             Row(
@@ -38,8 +38,10 @@ fun CheckList(tasks: List<Task>, onDelete: (Task) -> Unit) {
                 val checkedState = remember { mutableStateOf(false) }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
-                        checked = checkedState.value,
-                        onCheckedChange = { checkedState.value = it }
+                        checked = task.completed ?: false,
+                        onCheckedChange = { checked ->
+                            onTaskClick(task.copy(completed = checked))
+                        }
                     )
 
                     Column {

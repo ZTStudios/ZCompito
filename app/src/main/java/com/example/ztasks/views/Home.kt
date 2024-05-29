@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -60,15 +61,23 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun Home(loginData: LoginResponse, homeViewModel: HomeViewModel = viewModel(), taskViewModel: TaskViewModel = viewModel()) {
+fun Home(
+    loginData: LoginResponse,
+    homeViewModel: HomeViewModel = viewModel(),
+    taskViewModel: TaskViewModel = viewModel()
+) {
     var showDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     val scaffoldState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    var taskToDelete by remember { mutableStateOf<Task?>(null) }
 
     val tasks by homeViewModel.userTasks.observeAsState(initial = emptyList())
     val completedTasksCount = tasks.count { it.completed }
+
+    val incompleteTasks = tasks.filter { !it.completed }
 
     LaunchedEffect(Unit) {
         homeViewModel.fetchUserTasks(loginData.id)
@@ -90,7 +99,7 @@ fun Home(loginData: LoginResponse, homeViewModel: HomeViewModel = viewModel(), t
             )
         },
 
-    ) { paddingValues ->
+        ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxHeight()
@@ -143,7 +152,29 @@ fun Home(loginData: LoginResponse, homeViewModel: HomeViewModel = viewModel(), t
                 }
             }
             Row {
-                CheckList(tasks = tasks, onDelete = { task -> /* Handle delete action */ })
+                CheckList(
+                    tasks = incompleteTasks,
+                    onDelete = { task ->
+                        taskToDelete = task
+                        showDeleteDialog = true
+                    },
+                    onTaskClick = { task ->
+                        val updatedTask = task.copy(completed = true)
+                        taskViewModel.updateTask(updatedTask.id, updatedTask) { success, updatedTask ->
+                            if (success) {
+                                homeViewModel.fetchUserTasks(loginData.id)
+                            } else {
+                                coroutineScope.launch {
+                                    scaffoldState.showSnackbar(
+                                        message = "Error al actualizar la tarea",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                            }
+                        }
+                    }
+                )
+            }
             }
             Divider(modifier = Modifier.height(10.dp), color = Color.Transparent)
         }
@@ -171,7 +202,10 @@ fun Home(loginData: LoginResponse, homeViewModel: HomeViewModel = viewModel(), t
                             label = { Text("Descripción") }
                         )
                         Spacer(modifier = Modifier.padding(8.dp))
-                        Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Button(onClick = {
                                 val newTask = Task(
                                     title = title,
@@ -200,6 +234,39 @@ fun Home(loginData: LoginResponse, homeViewModel: HomeViewModel = viewModel(), t
                     }
                 }
             }
+        }
+        if (showDeleteDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog = false },
+                title = { Text(text = "Confirmar eliminación") },
+                text = { Text(text = "¿Estás seguro de que quieres eliminar esta tarea?") },
+                confirmButton = {
+                    Button(onClick = {
+                        taskToDelete?.let { task ->
+                            taskViewModel.deleteTask(task.id) { success ->
+                                if (success) {
+                                    homeViewModel.fetchUserTasks(loginData.id)
+                                } else {
+                                    coroutineScope.launch {
+                                        scaffoldState.showSnackbar(
+                                            message = "Error al eliminar la tarea",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        showDeleteDialog = false
+                    }) {
+                        Text("Eliminar")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showDeleteDialog = false }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
         }
     }
 
