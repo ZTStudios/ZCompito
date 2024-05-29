@@ -32,8 +32,8 @@ fun CheckList(tasks: List<Task>, onDelete: (Task) -> Unit, onTaskClick: (Task) -
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(8.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .fillParentMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 val checkedState = remember { mutableStateOf(false) }
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -41,6 +41,7 @@ fun CheckList(tasks: List<Task>, onDelete: (Task) -> Unit, onTaskClick: (Task) -
                         checked = task.completed ?: false,
                         onCheckedChange = { checked ->
                             onTaskClick(task.copy(completed = checked))
+                            checkedState.value = checked
                         }
                     )
 

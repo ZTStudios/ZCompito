@@ -9,6 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -24,7 +25,7 @@ interface Api {
     @POST("tasks/{id}")
     suspend fun createTask(@Body task: Task, @Path("id") id: Int) : Response<Task>
 
-    @PUT("tasks/{id}")
+    @PATCH("tasks/{id}")
     suspend fun updateTask(@Path("id") id: Int, @Body task: Task): Response<Task>
 
     @DELETE("tasks/{id}")

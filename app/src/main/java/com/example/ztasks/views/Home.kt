@@ -160,6 +160,7 @@ fun Home(
                     },
                     onTaskClick = { task ->
                         val updatedTask = task.copy(completed = true)
+                        println(updatedTask)
                         taskViewModel.updateTask(updatedTask.id, updatedTask) { success, updatedTask ->
                             if (success) {
                                 homeViewModel.fetchUserTasks(loginData.id)
@@ -188,22 +189,22 @@ fun Home(
                     shape = MaterialTheme.shapes.medium,
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = "Agregar Nueva Tarea")
+                        Text(text = "Add new task")
                         Spacer(modifier = Modifier.padding(8.dp))
                         OutlinedTextField(
                             value = title,
                             onValueChange = { title = it },
-                            label = { Text("Título") }
+                            label = { Text("Title") }
                         )
                         Spacer(modifier = Modifier.padding(8.dp))
                         OutlinedTextField(
                             value = description,
                             onValueChange = { description = it },
-                            label = { Text("Descripción") }
+                            label = { Text("Description") }
                         )
                         Spacer(modifier = Modifier.padding(8.dp))
                         Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                            horizontalArrangement =  Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Button(onClick = {
@@ -225,10 +226,10 @@ fun Home(
                                 }
                                 showDialog = false
                             }) {
-                                Text("Guardar")
+                                Text("Save")
                             }
                             Button(onClick = { showDialog = false }) {
-                                Text("Cancelar")
+                                Text("Cancel")
                             }
                         }
                     }
@@ -238,8 +239,8 @@ fun Home(
         if (showDeleteDialog) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },
-                title = { Text(text = "Confirmar eliminación") },
-                text = { Text(text = "¿Estás seguro de que quieres eliminar esta tarea?") },
+                title = { Text(text = "Confirm elimination") },
+                text = { Text(text = "¿Are you sure you want to delete this task?") },
                 confirmButton = {
                     Button(onClick = {
                         taskToDelete?.let { task ->
@@ -258,19 +259,17 @@ fun Home(
                         }
                         showDeleteDialog = false
                     }) {
-                        Text("Eliminar")
+                        Text("Delete")
                     }
                 },
                 dismissButton = {
                     Button(onClick = { showDeleteDialog = false }) {
-                        Text("Cancelar")
+                        Text("Cancel")
                     }
                 }
             )
         }
     }
-
-}
 
 @Composable
 fun TaskItem(task: Task) {
